@@ -53,6 +53,8 @@ To update ofxImGui within your openframeworks installation:
 We try to provide the best default settings for [each platform](./PlatformSupport.md), so you should be good to go.  
 If your project is using a special setup, you might need to manually set some configuration options, which are explained in [Configure.md](./Configure.md).
 
+If your project is using **ofxAddons that support ofxImGui**, add the `ofxAddons_ENABLE_IMGUI` define to your project. More info in [Developers.md](./Developers.md#ofxImGui-integration-within-ofxAddons).
+
 #### Debug compilation flags
 While interfacing your ofApp with ofxImGui, a good practise is to enable `OFXIMGUI_DEBUG` together with `ofSetLogLevel(OF_LOG_VERBOSE)`, it provides some general warnings on mistakes and logs some important setup steps.
 
@@ -133,7 +135,7 @@ There are several example projects, covering from the simplest use case to more 
 
 ## Developer info
 
-Useful developer info and how to get familiar with DearImGui : [Developer.md](./Developers.md).  
+Useful developer info and how to get familiar with DearImGui : [Developers.md](./Developers.md).  
 Also: information for using ofxImGui within ofxAddons and for ofxImGui developers and contributors.
 
 - - - -

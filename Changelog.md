@@ -8,6 +8,7 @@ _Tip: For compile-time depreciation hinting on your code, uncomment `IMGUI_DISAB
 
 # ofxImGui 1.91.0
 - Lots of new documentation.
+- Fix issue where default font was overwritten loading a first custom font.
 - Newly introduced ImGui Features : multi-select, box-select, item flags, links.
 
 - - - -

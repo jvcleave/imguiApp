@@ -99,21 +99,27 @@ Related issues:
 - - - -
 
 # ofxImGui integration within ofxAddons
-If your plugin needs to draw gui widgets, refer to `example-sharedcontext` to share the gui instance with other usercode drawing to the gui.
+For ofxAddon developers, we provide 2 ways of integrating ofxImGui within your addon.
 
-A better approach might be not to submit the draw calls directly and let the end user application do that by extending ImGui.  
-A fully integrated example can be found in [ofxBlend2D](https://github.com/Daandelange/ofxBlend2D/blob/111de1e2e073240dc4b45058d9ea06d0e76ce1f6/src/ofxBlend2D.h#L165-L187).
+#### 1. Provide custom ofxImGui widgets and methods
+The best way for supporting ofxImGui within your addon is to write custom widgets that end-users can call within their GUI.
+A fully integrated example can be found in [ofxBlend2D](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h).
 
 In your ofxAddon:  
-- Add macro conditions to your addon using `ofxAddons_ENABLE_IMGUI` to enable ofxImGui integration.
-- Add `#include "ofxImGui.h"` where you use ImGui code. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/111de1e2e073240dc4b45058d9ea06d0e76ce1f6/src/ofxBlend2D.cpp#L10-L13).
-- Add `myAddonInstance::drawImGui(){}` to your methods. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/111de1e2e073240dc4b45058d9ea06d0e76ce1f6/src/ofxBlend2D.h#L93-L95).
-- Add `ImGuiEx::MyGuiItem(const char* label, MyOfxAddonVarType&)`. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/111de1e2e073240dc4b45058d9ea06d0e76ce1f6/src/ofxBlend2D.h#L165-L187).
+- Add macro conditions to your addon using `ofxAddons_ENABLE_IMGUI` to enable ofxImGui integration. Please use this exact name so that a project can turn on ImGui features for all addons at once. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h#L36-L41).
+- Add `#include "ofxImGui.h"` where you use ImGui code. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.cpp#L10-L13).
+- Add `myAddonInstance::drawImGui(){}` to your methods. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h#L99-L101).
+- Add `ImGuiEx::MyAddonGuiItem(const char* label, MyOfxAddonVarType&)`. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h#L171-L193).
 
-In an ofApp :
-- Add `ofxBlend2D_ENABLE_IMGUI` to your project defines.
-- `MyAddonInstance.drawImGuiSettings();` to draw the full gui.
-- `ImGuiEx::MyGuiItem("MyAddonItem", &myAddonVar);`
+In an ofApp project :
+- Add `ofxAddons_ENABLE_IMGUI` to your project defines.
+- Use `MyAddonInstance.drawImGui();` on your addon instance to draw a full GUI.
+- Use `ImGuiEx::MyAddonGuiItem("MyAddonItem", &myAddonVar);` to draw a specific widget.
+
+#### 2. Use ofxImGui within your addon
+If your plugin needs to setup a GUI context and draw GUI widgets, your API calls might conflict with the ones from other addons and/or the ofxApp code. For example, what happens when `gui.setup()` is called twice ? When `gui.begin()` is called twice per frame ? ofxImGui provides a solution for this, please refer to `example-sharedcontext` to share the gui instance with other usercode.
+
+While supported, this method is not recommended. If possible, a better scenario would be to let the final ofApp setup the GUI without your ofxAddon submitting any ofxImGui calls directly. Please refer to method 1 above.
 
 - - - -
 

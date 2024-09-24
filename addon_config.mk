@@ -33,7 +33,9 @@ common:
 	
 	# any special flag that should be passed to the compiler when using this
 	# addon
-	# ADDON_CFLAGS =
+
+	# Automatically enable ofxImGui features within other ofxAddons
+	ADDON_CFLAGS = -DofxAddons_ENABLE_IMGUI
 	
 	# any special flag that should be passed to the linker when using this
 	# addon, also used for system libraries with -lname

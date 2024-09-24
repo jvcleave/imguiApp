@@ -117,7 +117,7 @@ In an ofApp project :
 - Use `ImGuiEx::MyAddonGuiItem("MyAddonItem", &myAddonVar);` to draw a specific widget.
 
 #### 2. Use ofxImGui within your addon
-If your plugin needs to setup a GUI context and draw GUI widgets, your API calls might conflict with the ones from other addons and/or the ofxApp code. For example, what happens when `gui.setup()` is called twice ? When `gui.begin()` is called twice per frame ? ofxImGui provides a solution for this, please refer to `example-sharedcontext` to share the gui instance with other usercode.
+If your plugin needs to setup a GUI context and draw GUI widgets, your API calls might conflict with the ones from other addons and/or the ofxApp code. For example, what happens when `gui.setup()` is called twice ? When `gui.begin()` is called twice per frame ? ofxImGui provides a solution for this, please refer to `example-sharedcontext` to share a gui instance with other unknown usercode using a master/slave setup system.
 
 While supported, this method is not recommended. If possible, a better scenario would be to let the final ofApp setup the GUI without your ofxAddon submitting any ofxImGui calls directly. Please refer to method 1 above.
 

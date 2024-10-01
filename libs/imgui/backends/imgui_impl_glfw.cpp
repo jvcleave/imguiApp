@@ -1,6 +1,7 @@
 // Warning!
 // This file has been modified for ofxImGui to support context switching.
 // This is not the original one. Changes are indicated.
+//----
 
 // dear imgui: Platform Backend for GLFW
 // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
@@ -152,6 +153,8 @@
 #define GLFW_HAS_GAMEPAD_API            (GLFW_VERSION_COMBINED >= 3300) // 3.3+ glfwGetGamepadState() new api
 #define GLFW_HAS_GETKEYNAME             (GLFW_VERSION_COMBINED >= 3200) // 3.2+ glfwGetKeyName()
 #define GLFW_HAS_GETERROR               (GLFW_VERSION_COMBINED >= 3300) // 3.3+ glfwGetError()
+
+#include "backends/imgui_impl_glfw_arc_support.h" // CUSTOM OFXIMGUI ADDED LINE
 
 // GLFW data
 enum GlfwClientApi
@@ -1015,6 +1018,8 @@ void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow*, const char* canvas_s
 // See https://github.com/pongasoft/emscripten-glfw/blob/master/docs/Usage.md#how-to-make-the-canvas-resizable-by-the-user for an explanation
 void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow* window, const char* canvas_selector)
 {
+	ImGui_ImplGlfw_ScopedContext sc(window); // CUSTOM OFXIMGUI ADDED LINE
+
   GLFWwindow* w = (GLFWwindow*)(EM_ASM_INT({ return Module.glfwGetWindow(UTF8ToString($0)); }, canvas_selector));
   IM_ASSERT(window == w); // Sanity check
   IM_UNUSED(w);

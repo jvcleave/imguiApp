@@ -18,7 +18,7 @@
 #include "LinkedList.hpp"
 
 // Fwd declarations
-class ImGui_ImplGlfw_Data;
+struct ImGui_ImplGlfw_Data;
 
 namespace ofxImGui {
 	class Gui;

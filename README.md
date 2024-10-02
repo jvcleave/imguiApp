@@ -21,29 +21,31 @@ ImGui's API is also quite nice : with very few code, you obtain a functional bas
 ofxImGui should run on the [latest openFrameworks release and it's OS/IDE requirements](https://openframeworks.cc/download/).  
 These are typically:
 
- - Mac OSX, Xcode
- - Windows 10, Visual Studio
- - Raspberry Pi
- - Linux Desktop
+ - MacOs (Xcode + QtCreator + Makefiles)
+ - Windows (Visual + VSCode)
+ - Raspberry Pi (Makefiles)
+ - Linux Desktop (QtCreator + Makefiles)
 
  For more precise platform compatibility information, please refer to [PlatformSupport.md](./PlatformSupport.md).
 
 - - - -
 
-## Install
+## Installation
 
 ````bash
-cd /path/to/of/addons && git clone https://github.com/jvcleave/ofxImGui.git
+cd /path/to/of/addons && git clone -b develop https://github.com/jvcleave/ofxImGui.git
 ````
 
 #### Optional - Upgrade GLFW
 You can configure oF to use GLFW 3.4 and ImGui will have an even more polished interface. See [Developers.md](./Developers.md#Improve-ofxImGui-s-backend-bindings).  
 
-#### Update ofxImGui
+#### Keeping ofxImGui up-to-date
 To update ofxImGui within your openframeworks installation:
 
-- `cd /path/to/ofxImGui && git pull && git submodule update`
-- (*optional but recommended*) After updating: Add `#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS` in your `imconfig.h` file to make sure you are not using to-be-obsoleted symbols. Update any soon-to-be obsoleted code if needed; the compilation errors will guide you to the changes to make.
+- `cd /path/to/ofxImGui && git pull`
+- (*optional but recommended*) After updating: If this ofxImGui version comes with a new ImGui version, add `#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS` in your project defines to make sure you are not using soon-to-be-obsoleted symbols and update them if needed, the compilation errors will guide you trough the changes to make. Specially if you use native ImGui code (as opposed to using the ofxImGui helpers) : if you don't do this regularly, you will have a harder time making your old ImGui code compatible with the newer versions. ImGui has a faster update scheme than OF and we try to update ofxImGui as frequently as possible.
+
+If you need a particular ImGui version, you can stick at the corresponding ofxImGui version, or downgrade it within that latest ofxImGui by grabbing the `imgui` folder from an older ofxImGui version.
 
 - - - -
 
@@ -91,13 +93,21 @@ ofxImGui provides a simple way to interface ImGui, but it's a huge library provi
 Most of these advanced options are explained in the `imgui_demo.cpp` source code. Also checkout `example-dockingandviewports` and `example-advanced`.  
 Some options are: Docking, viewports, custom fonts, and other configuration flags.
 
-### Draw a window (optional)
-If you don't call any window, ImGui will automatically create a dummy window named "Debug".
+### Draw your GUI
+Once the setup is done, there are basically 2 (combinable) ways to use ofxImGui :
+  - Via the helpers : The simplest one to get you going. You feed ofxImGui with your `ofParameter` instances and you're almost done. This is also a more robust way too as the ofxImGui code will provide automatic compatibility with future versions. The downside is that you have less control over how the GUI looks and you might want to custimise it further.
+  - Via the native ImGui API : For more fine-tuning and customisation, but takes a little more time to write. This provides full access to any of the many ImGui features.  
+    _For more experienced ImGui users: You can even write "ImGui extensions" which have access to an additional ImGuiInternal API._
+
+#### Draw a window (optional)
+If you don't call any window, ImGui will automatically create a dummy window named "Debug", so it's handy to create them with a name.  
+You can create as many windows as you want to keep your GUI organised.
 - Create a window : `ImGui::Begin("MyWindow"); /* Draw widgets here... */ ImGui::End();`
-- Submit GUI only when window content is visible : `if(ImGui::Begin("MyWindow")){ /* Draw widgets here... */ } ImGui::End();`
+- Important: Submit ImGui widgets only when window content is visible : `if(ImGui::Begin("MyWindow")){ /* Draw widgets here... */ } ImGui::End();`  
+  (_Anything sumbitted outside will end up in the "Debug" window_)
 - You can resume drawing to a window : `ImGui::Begin("MyWindow"); /* Start fill MyWindow */ ImGui::End(); ImGui::Begin("OtherWindow"); /* Fill OtherWindow */ ImGui::End(); ImGui::Begin("MyWindow"); /* Append to MyWindow */ ImGui::End();`
 
-### Draw Gui Components
+#### Draw Gui Components
 In your ofApp::draw(), call `ofAppGui.begin();` and `ofAppGui.end();`. In-between you can submit widgets.
 
 **Important**: Each interactive imgui widget needs to have a unique ID within the ImGui ID stack. This can be a `char*` or a `void*` that has a static memory address that won't move over time.  
@@ -108,17 +118,21 @@ Some simple components:
 - `ImGui::Text("Some dynamic text: %s", myString.c_str() ); // std::string ofApp::myString;`
 - `ImGui::Checkbox("A checkbox", &myBool); // bool ofApp::myBool;`
 - `ImGui::DragInt("An integer", &myInt); // int ofApp::myInt;`
+- `if(ImGui::Button("A Button")) myAction();` // void ofApp::myAction();
 
 Checkout the imgui demo window to discover all available widgets !
 
-### Customise components
+#### Customise components
+There are many ways to change the default widgets, be it by passing extra optional flags or using more API calls. If you're familiar OpenGL API, you won't have a hard time learning the ImGui API.  
+Again, have a look at the well documented ImGui Demo code to discover more possibilities. Here are some simple examples.
 - `ImGui::BeginDisabled(); /* Some disabled widgets here */ ImGui::EndDisabled();`
 - `PushItemWidth(50); /* Some compact widgets here */ PopItemWidth();`
 - `ImGui::Text("Push here -->"); ImGui::SameLine(); ImGui::Button("<-- Text there");`
 - `ImGui::Indent(); /* Some indented widgets here */ ImGui::Unindent();`
+- `ImGui::PushStyleColor(ImGuiCol_Button,{1,0,0,1}); /* Some button here */ ImGui::PopStyleColor();`
 
 
-### ofxImGuiHelpers
+#### ofxImGuiHelpers
 The helpers are a collection of glue samples for integrating OpenFrameworks objects into ImGui.
 Amongst others, it makes porting ofxGui apps to ofxImGui easier as it implements a compatibility layer for ofParameter.  
 To use the helpers, you need this : `#include "ImHelpers.h"`.  

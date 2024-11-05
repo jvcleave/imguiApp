@@ -48,7 +48,16 @@ class ofApp : public ofBaseApp{
                         );
             ofPopStyle();
 
-            // Todo: draw something behind docked windows
+            // If you need to know the gui viewport, checkout this helper
+            // Note: For testing purposes demonstrated before the GUI starts, because this is accessible from anywhere.
+            ofSetColor(ofColor::green, 5);
+            ofFill();
+            ofRectangle vp = gui.getMainWindowViewportRect();
+            static const int cSize=10;
+            ofDrawCircle(glm::vec2(vp.getTopLeft()), cSize);
+            ofDrawCircle(glm::vec2(vp.getBottomLeft()), cSize);
+            ofDrawCircle(glm::vec2(vp.getTopRight()), cSize);
+            ofDrawCircle(glm::vec2(vp.getBottomRight()), cSize);
 
             // Start drawing to ImGui (newFrame)
 			gui.begin();
@@ -65,9 +74,12 @@ class ofApp : public ofBaseApp{
             //dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
 
             // Define the ofWindow as a docking space
-            ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), dockingFlags); // Also draws the docked windows
+            // Also draws the docked windows at this stage.
+            ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), dockingFlags);
             ImGui::PopStyleColor(2);
 
+            // Show how to query the imgui docking layout and draw some stuff with it
+            // Advanced use, you probably wouldn't need this.
             ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
             if(dockNode){
                 ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
@@ -75,12 +87,17 @@ class ofApp : public ofBaseApp{
                 if( centralNode && centralNode->IsEmpty() ){
                     ImRect availableSpace = centralNode->Rect();
                     //availableSpace.Max = availableSpace.Min + ImGui::GetContentRegionAvail();
+
+                    // Submit a red rectangle using the ImGui draw api.
+                    // It will be drawn at the same stage as the other Gui elements, by order of submission.
                     ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL()+ImVec2(8,8), availableSpace.GetBR()-ImVec2(8,8), IM_COL32(255,50,50,255));
 
                     ImVec2 viewCenter = availableSpace.GetCenter();
                     // Depending on the viewports flag, the XY is either absolute or relative to the oF window.
                     if(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable ) viewCenter = viewCenter - ImVec2(ofGetWindowPositionX(),ofGetWindowPositionY());
 
+                    // These drawings will be submitted immediately by the renderer pipeline.
+                    // So they will be behind the GUI, submitted on `gui.draw()`
                     ofPushStyle();
                     ofSetRectMode(OF_RECTMODE_CENTER);
                     ofSetColor(255,0,0,2);

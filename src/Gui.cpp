@@ -4,6 +4,7 @@
 #include "ofAppGLFWWindow.h"
 
 #include "ofxImGuiConstants.h"
+#include "imgui_internal.h" // <-- advanced docking features from imgui internals...
 
 //#include "imgui.h"
 //#include "backends/imgui_impl_glfw.h"
@@ -526,6 +527,11 @@ namespace ofxImGui
             return;
         }
 
+        // Update cached variables
+        updateDockingVp();
+        // Update height
+        ImGuiWindow* menuWin = ImGui::FindWindowByID(ImGui::GetIDWithSeed("##MainMenuBar", nullptr, 0));
+        menuHeight = (menuWin && !menuWin->Hidden && menuWin->Active) ? ImGui::GetFrameHeight() : 0;
 
         // Only render in autodraw mode.
 		if(context->autoDraw){
@@ -1273,6 +1279,103 @@ namespace ofxImGui
 		ImGui::End();
 
 #endif // OFXIMGUI_DEBUG
+	}
+
+	void Gui::updateDockingVp(){
+		static ofRectangle dockingVpCached = ofGetWindowRect();
+
+        // Only when docking is enabled
+        if(bool(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable)){
+            // Note: same as defalut ID returned by ImGui::DockSpaceOverViewport(0, NULL, dockingFlags);
+            // A bit complicated to reverse, we have to grab the hardcoded IDs
+
+            // Like ImGui::DockSpaceOverViewport
+            char label[32];
+            ImFormatString(label, IM_ARRAYSIZE(label), "WindowOverViewport_%08X", ImGui::GetMainViewport()->ID);
+
+            // Get docking host window
+            ImGuiWindow* window = ImGui::FindWindowByName(label);
+            if(window){
+                // Like ImGui::DockSpaceOverViewport
+                static const std::string dockSpaceId = "DockSpace";
+                ImGuiID dockNodeID = ImGui::GetIDWithSeed(&*dockSpaceId.cbegin(), &*dockSpaceId.cend(), window->ID);
+
+                ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
+
+                // Only use dockspace if currently visible
+                if(dockNode && dockNode->IsVisible){
+                    ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
+
+                    // Verifies if the central node is empty (visible empty space for oF)
+                    if( centralNode && centralNode->IsEmpty() ){
+                        ImRect availableSpace = centralNode->Rect();
+
+                        // Detect change ?
+                        if(
+                            dockingVpCached.x != availableSpace.Min.x ||
+                            dockingVpCached.y != availableSpace.Min.y ||
+                            dockingVpCached.width != availableSpace.GetWidth() ||
+                            dockingVpCached.height != availableSpace.GetHeight()
+                        ){
+                            // Update viewport
+                            dockingVpCached.x = availableSpace.Min.x;
+                            dockingVpCached.y = availableSpace.Min.y;
+                            dockingVpCached.width = availableSpace.GetWidth();
+                            dockingVpCached.height = availableSpace.GetHeight();
+                        }
+
+                        dockingViewport = dockingVpCached;
+
+                        // Normalise data according to the different ImGui coordinate spaces
+                        // Depending on the viewports flag, the XY is either absolute or relative to the oF window.
+                        if(ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable ){
+                            dockingViewport.position.x -= ofGetWindowPositionX();
+                            dockingViewport.position.y -= ofGetWindowPositionY();
+                        }
+
+                        // Success (don't set default below)
+                        return;
+                    }
+                }
+            }
+        }
+
+		// Set dockingVP to ofWindow when docking unactive
+		dockingViewport = ofGetWindowRect();
+	}
+
+
+	ofRectangle Gui::getMainWindowViewportRect(bool returnScreenCoords, bool removeMenuBar, bool removeDockingAreas) const {
+
+		// Handle menubar
+		ofRectangle rect = ofGetWindowRect();
+
+		// Subtract menubar
+		if(removeMenuBar){
+			rect.y += menuHeight;
+			rect.height -= menuHeight;
+		}
+
+		// When docking is active, it already excludes the menubar
+		if(removeDockingAreas && ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable){
+			rect = dockingViewport;
+		}
+
+		// Make them absolute ?
+		if(returnScreenCoords){
+			rect.position.x += ofGetWindowPositionX();
+			rect.position.y += ofGetWindowPositionY();
+		}
+
+		return rect;
+	};
+
+	int Gui::getMenuHeight() const {
+		return menuHeight;
+	}
+
+	ofRectangle Gui::getDockingViewport() const {
+		return dockingViewport;
 	}
 
     // Initialise statics

@@ -5,6 +5,7 @@
 #include "ofTexture.h"
 #include "ofEvents.h"
 #include "ofAppBaseWindow.h"
+#include "ofRectangle.h"
 
 #include <map>
 #include <bitset>
@@ -174,6 +175,12 @@ namespace ofxImGui
 		// Helper window to debug ofxImGui specific stuff, and provide some hints on your setup.
 		void drawOfxImGuiDebugWindow() const;
 
+		// Helper to retrieve the current gui-free zone within the ofAppWindow.
+		// Basically returns windowRect - MenuBarSpace - SideDocks
+		ofRectangle getMainWindowViewportRect(bool returnScreenCoords=false, bool removeMenuBar=true, bool removeDockingAreas=true) const;
+		int getMenuHeight() const;
+		ofRectangle getDockingViewport() const;
+
     private:
         void render();
 		static void initialiseForWindow();
@@ -192,6 +199,11 @@ namespace ofxImGui
 		BaseTheme* theme=nullptr; // Todo: move this into ofxImguiContext ?
 
 		std::vector<ofTexture*> loadedTextures;
+
+		ofRectangle dockingViewport;
+		int menuHeight;
+
+		void updateDockingVp();
 
         // Static context instance. All Gui instances share the same context.
         // If you're dealing with dynamic libraries, you might need to pass this over to another ImGui instance.

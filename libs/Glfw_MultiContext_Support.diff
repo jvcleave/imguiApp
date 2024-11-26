@@ -1,5 +1,5 @@
 diff --git a/./imgui_git/backends/imgui_impl_glfw.cpp b/./imgui/backends/imgui_impl_glfw.cpp
-index ce52939..60d780d 100644
+index 52500bd..1f447da 100644
 --- a/./imgui_git/backends/imgui_impl_glfw.cpp
 +++ b/./imgui/backends/imgui_impl_glfw.cpp
 @@ -1,3 +1,8 @@
@@ -11,7 +11,7 @@ index ce52939..60d780d 100644
  // dear imgui: Platform Backend for GLFW
  // This needs to be used along with a Renderer (e.g. OpenGL3, Vulkan, WebGPU..)
  // (Info: GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan graphics context creation, etc.)
-@@ -80,6 +85,7 @@
+@@ -91,6 +96,7 @@
  #include "imgui.h"
  #ifndef IMGUI_DISABLE
  #include "imgui_impl_glfw.h"
@@ -19,7 +19,7 @@ index ce52939..60d780d 100644
  
  // Clang warnings with -Weverything
  #if defined(__clang__)
-@@ -128,7 +134,11 @@
+@@ -142,7 +148,11 @@
  #endif
  #define GLFW_HAS_FOCUS_WINDOW           (GLFW_VERSION_COMBINED >= 3200) // 3.2+ glfwFocusWindow
  #define GLFW_HAS_FOCUS_ON_SHOW          (GLFW_VERSION_COMBINED >= 3300) // 3.3+ GLFW_FOCUS_ON_SHOW
@@ -31,7 +31,7 @@ index ce52939..60d780d 100644
  #define GLFW_HAS_OSX_WINDOW_POS_FIX     (GLFW_VERSION_COMBINED >= 3301) // 3.3.1+ Fixed: Resizing window repositions it on MacOS #1553
  #ifdef GLFW_RESIZE_NESW_CURSOR          // Let's be nice to people who pulled GLFW between 2019-04-16 (3.4 define) and 2019-11-29 (cursors defines) // FIXME: Remove when GLFW 3.4 is released?
  #define GLFW_HAS_NEW_CURSORS            (GLFW_VERSION_COMBINED >= 3400) // 3.4+ GLFW_RESIZE_ALL_CURSOR, GLFW_RESIZE_NESW_CURSOR, GLFW_RESIZE_NWSE_CURSOR, GLFW_NOT_ALLOWED_CURSOR
-@@ -144,6 +154,8 @@
+@@ -158,6 +168,8 @@
  #define GLFW_HAS_GETKEYNAME             (GLFW_VERSION_COMBINED >= 3200) // 3.2+ glfwGetKeyName()
  #define GLFW_HAS_GETERROR               (GLFW_VERSION_COMBINED >= 3300) // 3.3+ glfwGetError()
  
@@ -40,7 +40,7 @@ index ce52939..60d780d 100644
  // GLFW data
  enum GlfwClientApi
  {
-@@ -356,6 +368,8 @@ static bool ImGui_ImplGlfw_ShouldChainCallback(GLFWwindow* window)
+@@ -366,6 +378,8 @@ static bool ImGui_ImplGlfw_ShouldChainCallback(GLFWwindow* window)
  
  void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
  {
@@ -49,7 +49,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackMousebutton != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackMousebutton(window, button, action, mods);
-@@ -369,6 +383,8 @@ void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int acti
+@@ -383,6 +397,8 @@ void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button, int acti
  
  void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
  {
@@ -58,7 +58,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackScroll != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackScroll(window, xoffset, yoffset);
-@@ -417,6 +433,8 @@ static int ImGui_ImplGlfw_TranslateUntranslatedKey(int key, int scancode)
+@@ -432,6 +448,8 @@ static int ImGui_ImplGlfw_TranslateUntranslatedKey(int key, int scancode)
  
  void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int keycode, int scancode, int action, int mods)
  {
@@ -67,7 +67,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackKey != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackKey(window, keycode, scancode, action, mods);
-@@ -439,6 +457,8 @@ void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int keycode, int scancode, i
+@@ -454,6 +472,8 @@ void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int keycode, int scancode, i
  
  void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused)
  {
@@ -76,7 +76,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackWindowFocus != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackWindowFocus(window, focused);
-@@ -449,6 +469,8 @@ void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused)
+@@ -468,6 +488,8 @@ void ImGui_ImplGlfw_WindowFocusCallback(GLFWwindow* window, int focused)
  
  void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y)
  {
@@ -85,7 +85,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackCursorPos != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackCursorPos(window, x, y);
-@@ -469,6 +491,8 @@ void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y)
+@@ -488,6 +510,8 @@ void ImGui_ImplGlfw_CursorPosCallback(GLFWwindow* window, double x, double y)
  // so we back it up and restore on Leave/Enter (see https://github.com/ocornut/imgui/issues/4984)
  void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, int entered)
  {
@@ -94,7 +94,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackCursorEnter != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackCursorEnter(window, entered);
-@@ -489,6 +513,8 @@ void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, int entered)
+@@ -508,6 +532,8 @@ void ImGui_ImplGlfw_CursorEnterCallback(GLFWwindow* window, int entered)
  
  void ImGui_ImplGlfw_CharCallback(GLFWwindow* window, unsigned int c)
  {
@@ -103,7 +103,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      if (bd->PrevUserCallbackChar != nullptr && ImGui_ImplGlfw_ShouldChainCallback(window))
          bd->PrevUserCallbackChar(window, c);
-@@ -527,6 +553,8 @@ static LRESULT CALLBACK ImGui_ImplGlfw_WndProc(HWND hWnd, UINT msg, WPARAM wPara
+@@ -546,6 +572,8 @@ static LRESULT CALLBACK ImGui_ImplGlfw_WndProc(HWND hWnd, UINT msg, WPARAM wPara
  
  void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window)
  {
@@ -112,7 +112,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      IM_ASSERT(bd->InstalledCallbacks == false && "Callbacks already installed!");
      IM_ASSERT(bd->Window == window);
-@@ -544,6 +572,8 @@ void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window)
+@@ -563,6 +591,8 @@ void ImGui_ImplGlfw_InstallCallbacks(GLFWwindow* window)
  
  void ImGui_ImplGlfw_RestoreCallbacks(GLFWwindow* window)
  {
@@ -121,7 +121,7 @@ index ce52939..60d780d 100644
      ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
      IM_ASSERT(bd->InstalledCallbacks == true && "Callbacks not installed!");
      IM_ASSERT(bd->Window == window);
-@@ -583,6 +613,8 @@ EM_JS(void, ImGui_ImplGlfw_EmscriptenOpenURL, (char const* url), { url = url ? U
+@@ -606,6 +636,8 @@ EM_JS(void, ImGui_ImplGlfw_EmscriptenOpenURL, (const char* url), { url = url ? U
  
  static bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks, GlfwClientApi client_api)
  {
@@ -130,7 +130,7 @@ index ce52939..60d780d 100644
      ImGuiIO& io = ImGui::GetIO();
      IMGUI_CHECKVERSION();
      IM_ASSERT(io.BackendPlatformUserData == nullptr && "Already initialized a platform backend!");
-@@ -986,6 +1018,8 @@ void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow*, const char* canvas_s
+@@ -1039,6 +1071,8 @@ void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow*, const char* canvas_s
  // See https://github.com/pongasoft/emscripten-glfw/blob/master/docs/Usage.md#how-to-make-the-canvas-resizable-by-the-user for an explanation
  void ImGui_ImplGlfw_InstallEmscriptenCallbacks(GLFWwindow* window, const char* canvas_selector)
  {
@@ -139,7 +139,7 @@ index ce52939..60d780d 100644
    GLFWwindow* w = (GLFWwindow*)(EM_ASM_INT({ return Module.glfwGetWindow(UTF8ToString($0)); }, canvas_selector));
    IM_ASSERT(window == w); // Sanity check
    IM_UNUSED(w);
-@@ -1017,6 +1051,8 @@ struct ImGui_ImplGlfw_ViewportData
+@@ -1070,6 +1104,8 @@ struct ImGui_ImplGlfw_ViewportData
  
  static void ImGui_ImplGlfw_WindowCloseCallback(GLFWwindow* window)
  {
@@ -148,7 +148,7 @@ index ce52939..60d780d 100644
      if (ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle(window))
          viewport->PlatformRequestClose = true;
  }
-@@ -1029,6 +1065,8 @@ static void ImGui_ImplGlfw_WindowCloseCallback(GLFWwindow* window)
+@@ -1082,6 +1118,8 @@ static void ImGui_ImplGlfw_WindowCloseCallback(GLFWwindow* window)
  // ignore recent glfwSetWindowXXX() calls.
  static void ImGui_ImplGlfw_WindowPosCallback(GLFWwindow* window, int, int)
  {
@@ -157,7 +157,7 @@ index ce52939..60d780d 100644
      if (ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle(window))
      {
          if (ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData)
-@@ -1044,6 +1082,8 @@ static void ImGui_ImplGlfw_WindowPosCallback(GLFWwindow* window, int, int)
+@@ -1097,6 +1135,8 @@ static void ImGui_ImplGlfw_WindowPosCallback(GLFWwindow* window, int, int)
  
  static void ImGui_ImplGlfw_WindowSizeCallback(GLFWwindow* window, int, int)
  {
@@ -166,7 +166,7 @@ index ce52939..60d780d 100644
      if (ImGuiViewport* viewport = ImGui::FindViewportByPlatformHandle(window))
      {
          if (ImGui_ImplGlfw_ViewportData* vd = (ImGui_ImplGlfw_ViewportData*)viewport->PlatformUserData)
-@@ -1101,6 +1141,7 @@ static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
+@@ -1159,6 +1199,7 @@ static void ImGui_ImplGlfw_CreateWindow(ImGuiViewport* viewport)
          glfwMakeContextCurrent(vd->Window);
          glfwSwapInterval(0);
      }
@@ -174,7 +174,7 @@ index ce52939..60d780d 100644
  }
  
  static void ImGui_ImplGlfw_DestroyWindow(ImGuiViewport* viewport)
-@@ -1123,7 +1164,8 @@ static void ImGui_ImplGlfw_DestroyWindow(ImGuiViewport* viewport)
+@@ -1181,7 +1222,8 @@ static void ImGui_ImplGlfw_DestroyWindow(ImGuiViewport* viewport)
  
              glfwDestroyWindow(vd->Window);
          }

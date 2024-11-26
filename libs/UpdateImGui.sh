@@ -23,7 +23,8 @@ VERSION_1_90_0=ce0d0ac8 # 1.90.0
 VERSION_1_90_1=2dc85e6e # 1.90.1
 VERSION_1_90_9=3369cbd2 # 1.90.9
 VERSION_1_91_0=139e99ca # 1.91.0
-VERSION_SHA=$VERSION_1_91_0
+VERSION_1_91_5=368123a # 1.91.5
+VERSION_SHA=$VERSION_1_91_5
 # ------------------
 
 echo "\nHello,"
@@ -40,7 +41,7 @@ else
 	echo "Found ImGui repo in /libs/imgui_git"
 fi;
 
-# Pick the right
+# Pick the right version commit
 echo "Checking out latest commit"
 if [[ -d ./imgui_git ]]; then
 	cd ./imgui_git

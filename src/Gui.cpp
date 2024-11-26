@@ -1081,7 +1081,7 @@ namespace ofxImGui
 						ImGui::Dummy({10,10});
 						ImGui::SeparatorText("ImGui Input");
 						ImGui::Text("Keys down  :");
-						for (ImGuiKey key = ImGuiKey_KeysData_OFFSET; key < ImGuiKey_COUNT; key = (ImGuiKey)(key + 1)) {
+						for (ImGuiKey key = ImGuiKey_NamedKey_BEGIN; key < ImGuiKey_NamedKey_END; key = (ImGuiKey)(key + 1)) {
 							if(!ImGui::IsKeyDown(key)) continue;
 							ImGui::SameLine();
 							ImGui::Text((key < ImGuiKey_NamedKey_BEGIN) ? "\"%s\"" : "\"%s\" %d", ImGui::GetKeyName(key), key);

@@ -1,5 +1,5 @@
 diff --git a/./imgui_git/backends/imgui_impl_opengl2.cpp b/./imgui/backends/imgui_impl_opengl2.cpp
-index 51ea82c..34acb38 100644
+index 0028369..2a2a978 100644
 --- a/./imgui_git/backends/imgui_impl_opengl2.cpp
 +++ b/./imgui/backends/imgui_impl_opengl2.cpp
 @@ -1,3 +1,8 @@
@@ -11,7 +11,7 @@ index 51ea82c..34acb38 100644
  // dear imgui: Renderer Backend for OpenGL2 (legacy OpenGL, fixed pipeline)
  // This needs to be used along with a Platform Backend (e.g. GLFW, SDL, Win32, custom..)
  
-@@ -54,6 +59,12 @@
+@@ -55,6 +60,12 @@
  #pragma clang diagnostic ignored "-Wnonportable-system-include-path"
  #endif
  
@@ -24,7 +24,7 @@ index 51ea82c..34acb38 100644
  // Include OpenGL header (without an OpenGL loader) requires a bit of fiddling
  #if defined(_WIN32) && !defined(APIENTRY)
  #define APIENTRY __stdcall                  // It is customary to use APIENTRY for OpenGL function pointer declarations on all platforms.  Additionally, the Windows OpenGL header needs APIENTRY.
-@@ -67,6 +78,7 @@
+@@ -68,6 +79,7 @@
  #else
  #include <GL/gl.h>
  #endif

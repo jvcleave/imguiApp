@@ -329,7 +329,7 @@ class ofApp : public ofBaseApp{
 
                     //GetImTextureID is a static function defined in Helpers.h that accepts ofTexture, ofImage, or GLuint
                     ImGui::Dummy(ImVec2(10,10));
-                    if(ImGui::ImageButton(GetImTextureID(imageButtonID), ImVec2(200, 200))){
+                    if(ImGui::ImageButton("imagebutton", GetImTextureID(imageButtonID), ImVec2(200, 200))){
                            ofLog() << "PRESSED";
                     }
                     //or do it manually

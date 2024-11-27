@@ -43,9 +43,15 @@ namespace ofxImGui
 		io.DeltaTime = 1.0f / 60.0f; // start with non-null time
 		io.WantCaptureMouse = true;
 
+#ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+		// Here we disable the code below to let users compile a project without throwing ofxImGui related warnings
+		// Devs note: this functionality still needs to be updated before it depreciates !
+		#pragma message "Notice: you are compiling with IMGUI_DISABLE_OBSOLETE_FUNCTIONS enabled, clipboard functions have been disabled (for EngineOpenFrameworks only)."
+#else
 		// Clipboard management
 		io.SetClipboardTextFn = &EngineOpenFrameworks::setClipboardString;
 		io.GetClipboardTextFn = &EngineOpenFrameworks::getClipboardString;
+#endif
 
 		// Backend name
 		io.BackendPlatformName = "imgui_impl_ofximgui_native_of";

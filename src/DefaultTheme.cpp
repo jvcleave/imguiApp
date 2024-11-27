@@ -118,7 +118,7 @@ namespace ofxImGui
         style->Colors[ImGuiCol_TableRowBgAlt]           = ImVec4(col_main_area, 0.06f);
         style->Colors[ImGuiCol_TextSelectedBg]          = ImVec4(col_main_head, 0.43f);
         style->Colors[ImGuiCol_DragDropTarget]          = ImVec4(col_main_head, 0.8f);
-        style->Colors[ImGuiCol_NavHighlight]            = ImVec4(col_main_head, 1.f);
+        style->Colors[ImGuiCol_NavCursor]               = ImVec4(col_main_head, 1.f);
         style->Colors[ImGuiCol_NavWindowingHighlight]   = ImVec4(col_main_head, 0.f);
         style->Colors[ImGuiCol_NavWindowingDimBg]       = ImVec4(col_main_area, 0.73f);
         style->Colors[ImGuiCol_ModalWindowDimBg]        = ImVec4(col_main_area, 0.73f);

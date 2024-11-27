@@ -1062,7 +1062,9 @@ namespace ofxImGui
 						ImGui::PopStyleColor();
 						ImGui::CheckboxFlags("NavEnableKeyboard",    &io.ConfigFlags, ImGuiConfigFlags_NavEnableKeyboard);
 						ImGui::CheckboxFlags("NavEnableGamepad",     &io.ConfigFlags, ImGuiConfigFlags_NavEnableGamepad);
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS // soon to be depreciated ! Safe to remove when reade. See io.ConfigNavMoveSetMousePos
 						ImGui::CheckboxFlags("NavEnableSetMousePos", &io.ConfigFlags, ImGuiConfigFlags_NavEnableSetMousePos);
+#endif
 						ImGui::CheckboxFlags("NoMouse",              &io.ConfigFlags, ImGuiConfigFlags_NoMouse);
 						ImGui::CheckboxFlags("DockingEnable",        &io.ConfigFlags, ImGuiConfigFlags_DockingEnable);
 						ImGui::CheckboxFlags("ViewportsEnable",      &io.ConfigFlags, ImGuiConfigFlags_ViewportsEnable);
@@ -1076,6 +1078,7 @@ namespace ofxImGui
 						ImGui::Checkbox("io.MouseDrawCursor", &io.MouseDrawCursor);
 						ImGui::Checkbox("io.ConfigInputTextCursorBlink", &io.ConfigInputTextCursorBlink);
 						ImGui::Checkbox("io.ConfigWindowsResizeFromEdges", &io.ConfigWindowsResizeFromEdges);
+						ImGui::Checkbox("io.ConfigNavMoveSetMousePos", &io.ConfigNavMoveSetMousePos);
 
 						// User Input
 						ImGui::Dummy({10,10});

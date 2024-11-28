@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "IconsFontAwesome5.h"
+#include "ProggyTiny.cpp" // <-- Be sure to include this only 1 time from a cpp file. (do not include from a header file)
 
 //--------------------------------------------------------------
 void ofApp::setup()
@@ -26,13 +27,23 @@ void ofApp::setup()
     //myCharRanges = normalCharRanges; // Uncomment to disable polish characters
 
     // Set font and keep a reference of it for using it later
+    // Font files are located within the data folder
     customFont = gui.addFont("Roboto-Medium.ttf",16.f, nullptr, myCharRanges, false);
 
-    // You can also load fonts from memory
+    // You can also load fonts from memory, optionally compressed
     // It will compile the font within the binary, so you don't have to ship the font file separately. Increases binary size.
     // https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#using-font-data-embedded-in-source-code
     // #include "MyCompressedFont.h"
     // gui.addFontFromMemory((void*)MyCompressedFont, sizeof(MyCompressedFont),16.f, nullptr, myCharRanges);
+
+    // Here we directly interact with the ImGui fonts API instead of ofxImGui
+    // (not recommended, but supports some more features such as compression)
+    // Fonts from memory are hard-coded in the compiled binary using a C++ source file holding the data.
+    auto& io = ImGui::GetIO();
+    proggyFont = io.Fonts->AddFontFromMemoryCompressedTTF(&ProggyTiny_compressed_data, ProggyTiny_compressed_size, 10);
+
+    // After manipulating fonts via the ImGui API, you need to trigger ofxImGui
+    gui.rebuildFontsTexture();
 
     // Add fontawesome fonts by merging new glyphs
     ImFontConfig config;
@@ -97,7 +108,16 @@ void ofApp::draw(){
     ImGui::PopFont();
     ImGui::Dummy(ImVec2(0,10));
 
+    // ProggyTiny font
+    ImGui::PushFont(proggyFont);
+    ImGui::CollapsingHeader("ProggyTiny font", ImGuiTreeNodeFlags_Leaf);
+    ImGui::Text("This text is rendered with ProggyTiny.");
+    ImGui::Text("The font has been loaded from the program binary.");
+    ImGui::PopFont();
+    ImGui::Dummy(ImVec2(0,10));
+
     // Default font
+    ImGui::CollapsingHeader("More", ImGuiTreeNodeFlags_Leaf);
     ImGuiIO& io = ImGui::GetIO();
     ImGui::Text("Default font: %s", io.FontDefault==nullptr?"[None]":io.FontDefault->GetDebugName());
     ImGui::Dummy(ImVec2(0,10));

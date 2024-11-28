@@ -23,5 +23,6 @@ public:
     
     ofxImGui::Gui gui;
     ImFont* customFont = nullptr;
+    ImFont* proggyFont = nullptr;
 
 };

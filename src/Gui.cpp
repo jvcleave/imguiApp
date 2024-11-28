@@ -341,16 +341,14 @@ namespace ofxImGui
 
         ImFont* font = io.Fonts->AddFontFromFileTTF(filePath.c_str(), fontSize, _fontConfig, _glyphRanges);
 
-		if (io.Fonts->Fonts.size() > 0) {
-            io.Fonts->Build();
-			if( context->engine.updateFontsTexture() ){
-                // Set default font when there's none yet, or as requested
-                if(_setAsDefaultFont) setDefaultFont(font);
-                return font;
-            }
-            else return nullptr;
+		if (font != nullptr){
+			if(_setAsDefaultFont) setDefaultFont(font);
+			rebuildFontsTexture();
+			return font;
 		}
-		return nullptr;
+		else {
+			return nullptr;
+		}
 	}
 	//--------------------------------------------------------------
 	ImFont* Gui::addFontFromMemory(void* fontData, int fontDataSize, float fontSize, const ImFontConfig* _fontConfig, const ImWchar* _glyphRanges, bool _setAsDefaultFont ) {
@@ -372,17 +370,31 @@ namespace ofxImGui
 
 		ImFont* font = io.Fonts->AddFontFromMemoryTTF( fontData, fontDataSize, fontSize, _fontConfig, _glyphRanges);
 
-		if (io.Fonts->Fonts.size() > 0) {
-			io.Fonts->Build();
-			if( context->engine.updateFontsTexture() ){
-				if(_setAsDefaultFont) setDefaultFont(font);
-				return font;
-			}
-			else return nullptr;
+		if (font != nullptr){
+			if(_setAsDefaultFont) setDefaultFont(font);
+			rebuildFontsTexture();
+			return font;
 		}
 		else {
 			return nullptr;
 		}
+	}
+
+	//--------------------------------------------------------------
+	bool Gui::rebuildFontsTexture(){
+		if(context==nullptr){
+		  ofLogWarning() << "You must build fonts after gui.setup() ! (ignoring this call)";
+		  return false;
+		}
+
+		ImGui::SetCurrentContext(context->imguiContext);
+		ImGuiIO& io = ImGui::GetIO();
+
+		if (io.Fonts->Fonts.size() > 0) {
+			io.Fonts->Build();
+			return context->engine.updateFontsTexture();
+		}
+		return false;
 	}
 
 	//--------------------------------------------------------------

@@ -10,11 +10,13 @@ Project{
 
     ofApp {
         name: { return FileInfo.baseName(sourceDirectory) }
+        cpp.minimumMacosVersion: '10.15'
+        cpp.cxxLanguageVersion: 'c++17'
 
         files: [
             'src/main.cpp',
             'src/ofApp.cpp',
-            'src/ofApp.h',
+            'src/*.h'
         ]
 
         of.addons: [

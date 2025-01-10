@@ -102,8 +102,10 @@ Related issues:
 For ofxAddon developers, we provide 2 ways of integrating ofxImGui within your addon.
 
 #### 1. Provide custom ofxImGui widgets and methods
-The best way for supporting ofxImGui within your addon is to write custom widgets that end-users can call within their GUI.
+The best way for supporting ofxImGui within your addon is to write custom widgets that end-users can call within their own ofApp's GUI layout.   
 A fully integrated example can be found in [ofxBlend2D](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h).
+
+_Note to addon maintainers:_ We encourage addon maintainers to accept community pull requests for ofxImGui widgets. We are aware that this creates a small maintenance overhaul but your ofxAddon is really the easiest place to provide support for ofxImGui features that control it. The extra code is always disabled by default and enabled on a per project opt-in basis. And it will help other ofxImGui users that use your addon.
 
 In your ofxAddon:  
 - Add macro conditions to your addon using `ofxAddons_ENABLE_IMGUI` to enable ofxImGui integration. Please use this exact name so that a project can turn on ImGui features for all addons at once. [Sample](https://github.com/Daandelange/ofxBlend2D/blob/263f1910bd7a269a1d4dcd001360dfd8520442bf/src/ofxBlend2D.h#L36-L41).
@@ -119,7 +121,31 @@ In an ofApp project :
 #### 2. Use ofxImGui within your addon
 If your plugin needs to setup a GUI context and draw GUI widgets, your API calls might conflict with the ones from other addons and/or the ofxApp code. For example, what happens when `gui.setup()` is called twice ? When `gui.begin()` is called twice per frame ? ofxImGui provides a solution for this, please refer to `example-sharedcontext` to share a gui instance with other unknown usercode using a master/slave setup system.
 
-While supported, this method is not recommended. If possible, a better scenario would be to let the final ofApp setup the GUI without your ofxAddon submitting any ofxImGui calls directly. Please refer to method 1 above.
+While supported, this method is not recommended. If possible, a better scenario would be to let the final ofApp setup the GUI without your ofxAddon submitting any ofxImGui calls directly. Please refer to method 1 above for directions.
+
+- - - -
+
+# ofxAddons with custom ofxImGui widgets.
+
+_A note about third party ofxAddons that provide ofxImGui widgets:_  
+Some ofxAddon authors provide custom ofxImGui widgets, facilitating integration with ImGui. These are optional but can save you a lot of time.  
+
+ - Sometimes, the widgets are supported by the addon maintainer.
+ - Other ofxAddons have a community-managed widgets. The author is accepting (well formatted) pull requests but not actively maintaining the ofxImGui part.  
+   For such repos : **Please fill any ofxImGui related issue in the ofxImGui repo.**
+
+#### How to enable custom ofxImGui widgets from third party ofxAddons ?
+
+There's a global compilation flag (`ofxAddons_ENABLE_IMGUI`) that has to be enabled in your ofApp project's compilation settings.  
+When an ofApp project enables this setting, all supported addons will compile with ofxImGui support.  
+Without this flag, all ofxImGui related code stays off as well as their respective dependencies.  
+Once enabled, you can use the widgets that your included ofxAddons provide.  
+
+Depending on your IDE, here are some directions:
+ - Makefiles / VSCode / VSCodium : In `config.make` : `PROJECT_DEFINES = ofxAddons_ENABLE_IMGUI`.
+ - XCode : In your project's "Build Settings" : Add in "Other C Flags" : `-DofxAddons_ENABLE_IMGUI`. 
+ - Qt-Creator : In your `.qbs` : `of.defines: ['ofxAddons_ENABLE_IMGUI']`.
+ - Other IDE : Try to find a "project defines" section in your project settings, or a "c / c++ flags" section and add `ofxAddons_ENABLE_IMGUI` to it.
 
 - - - -
 

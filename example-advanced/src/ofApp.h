@@ -67,6 +67,9 @@ class ofApp : public ofBaseApp{
                 fileTextures.push_back(texID);
             }
             imageButtonID = fileTextures.front();
+
+            // It's nice to disable escape quitting your ofApp, as ImGui also listens to escape.
+            ofSetEscapeQuitsApp(false);
         }
 
         void draw() {
@@ -99,6 +102,10 @@ class ofApp : public ofBaseApp{
                     ImGui::Separator();
                     ImGui::Checkbox("Show ImGui Demo", &showDemo);
                     ImGui::SameLine(); HelpMarker("The ImGui Demo Window demonstrates many gui possibilities and serves as a reference for available gui widgets, together with its source code.");
+
+                    ImGui::Separator();
+                    ImGui::Checkbox("Show ofxImGui Debug Window", &showOfxImGuiDebugWindow);
+                    ImGui::SameLine(); HelpMarker("Helper window for debugging and optimising your ofxImGui instance within your ofApp.\nIt can also been seen as an interactive tutorial explaining how ofxmGui is setup (for avanced users).");
 
                     ImGui::Separator();
                     ImGui::Checkbox("Show ImGui FX", &showFX);
@@ -354,7 +361,11 @@ class ofApp : public ofBaseApp{
                 ImGui::SetNextWindowPos(ImVec2(ofGetWindowPositionX()+ofGetWidth()-350,ofGetWindowPositionY()+30), ImGuiCond_FirstUseEver );
                 ImGui::ShowMetricsWindow( &showMetrics );
             }
+
             if(showDemo) ImGui::ShowDemoWindow(&showDemo);
+
+            if(showOfxImGuiDebugWindow) gui.drawOfxImGuiDebugWindow(&showOfxImGuiDebugWindow);
+
             if(showFX){
                 // Window position is only set on the first launch
                 ImGui::SetNextWindowPos(ImVec2(ofGetWindowPositionX()+ofGetWidth()-350,ofGetWindowPositionY()+ofGetHeight()-230), ImGuiCond_FirstUseEver );
@@ -373,6 +384,15 @@ class ofApp : public ofBaseApp{
             glm::vec2 ofWindowTopRight    = glm::vec2(ofGetWindowWidth(),0);
             glm::vec2 ofWindowBottomLeft  = glm::vec2(0                 ,ofGetWindowHeight());
             glm::vec2 ofWindowBottomRight = glm::vec2(ofGetWindowWidth(),ofGetWindowHeight());
+
+            // Space changes ofWindow to imguiViewport.
+            if( !ofGetKeyPressed(' ')){
+                ofRectangle viewport = gui.getMainWindowViewportRect();
+                ofWindowTopLeft     = viewport.getTopLeft();
+                ofWindowTopRight    = viewport.getTopRight();
+                ofWindowBottomLeft  = viewport.getBottomLeft();
+                ofWindowBottomRight = viewport.getBottomRight();
+            }
 
             if(drawLines){
                 ofSetLineWidth(lineThickness);
@@ -475,6 +495,7 @@ class ofApp : public ofBaseApp{
         bool showDemo         = false;
         bool showFX           = false;
         bool showSampleWindow = true;
+        bool showOfxImGuiDebugWindow = false;
 
         float v = 0;
 

@@ -612,10 +612,10 @@ namespace ofxImGui
     }
 
 	//--------------------------------------------------------------
-	void Gui::drawOfxImGuiDebugWindow() const {
+	void Gui::drawOfxImGuiDebugWindow(bool* open) const {
 		// Only provide this functions with debug flags on
 #ifdef OFXIMGUI_DEBUG
-		if( ImGui::Begin("ofxImGui Debug Window") ){
+		if( ImGui::Begin("ofxImGui Debug Window", open) ){
 
 			if(ImGui::BeginTabBar("DebugTabs")){
 

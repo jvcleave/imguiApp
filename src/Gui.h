@@ -174,7 +174,7 @@ namespace ofxImGui
         void afterDraw(ofEventArgs& _args); // Listener
 
 		// Helper window to debug ofxImGui specific stuff, and provide some hints on your setup.
-		void drawOfxImGuiDebugWindow() const;
+		void drawOfxImGuiDebugWindow(bool* open=nullptr) const;
 
 		// Helper to retrieve the current gui-free zone within the ofAppWindow.
 		// Basically returns windowRect - MenuBarSpace - SideDocks

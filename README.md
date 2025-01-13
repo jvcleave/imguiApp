@@ -176,4 +176,5 @@ ofxImGui was initiated in 2015 by @jvcleave. Today, he's maintainging it togethe
 
 ## License
 
+- [ofxImGui is MIT licensed](./License.md).
 - [DearImGui is MIT licensed](./libs/imgui/src/LICENSE.txt).

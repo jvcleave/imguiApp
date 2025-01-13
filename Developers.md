@@ -70,13 +70,13 @@ ImGui_ImplGlfw_RemoveWindowContext(vd->Window); // CUSTOM ADDED LINE FOR OFXIMGU
 ````  
 Switching contexts is possible since these issues, but still we are in "isolation mode". Right now, ImGui doesn't offer a way to register additional host viewports from a native system window, but they plan to support it in the future. So now we create an ImGui context per ofAppWindow.  
 ImGui doesn't plan to support this but the creator himself [started a template for this](https://github.com/ocornut/imgui_club/blob/main/imgui_multicontext_compositor/), ideally we [would move to support that](https://github.com/jvcleave/ofxImGui/issues/130).  
-Related issues:  
-     - [Multiple GLFW contexts : glfw event binding](https://github.com/ocornut/imgui/issues/5439)
-     - [Does GLFW implementation only handle one GLFWindow?](https://discourse.dearimgui.org/t/does-glfw-implementation-only-handle-one-glfwindow/305)
-     - [Add support for multiple GLFW contexts](https://github.com/ocornut/imgui/pull/3934)
-     - [Multiple host viewports](https://github.com/ocornut/imgui/issues/3012)
-     - [Correct use of ImGui_ImplGlfw_NewFrame with multiple ImGui contexts, and g_Time](https://github.com/ocornut/imgui/issues/2526)
-     - [Nesting multiple imgui contexts (glfw+opengl3)](https://github.com/ocornut/imgui/issues/2004)
+Related issues:
+ - [Multiple GLFW contexts : glfw event binding](https://github.com/ocornut/imgui/issues/5439)
+ - [Does GLFW implementation only handle one GLFWindow?](https://discourse.dearimgui.org/t/does-glfw-implementation-only-handle-one-glfwindow/305)
+ - [Add support for multiple GLFW contexts](https://github.com/ocornut/imgui/pull/3934)
+ - [Multiple host viewports](https://github.com/ocornut/imgui/issues/3012)
+ - [Correct use of ImGui_ImplGlfw_NewFrame with multiple ImGui contexts, and g_Time](https://github.com/ocornut/imgui/issues/2526)
+ - [Nesting multiple imgui contexts (glfw+opengl3)](https://github.com/ocornut/imgui/issues/2004)
 
 - 2. *Add GL ES 1 support so that it compiles on Rpis :*  in `imgui_impl_opengl2.cpp`
 ````cpp
@@ -90,10 +90,10 @@ Related issues:
   Between oF 0.11.0 and oF 0.12.1, GLFW versions have been changing a lot. Refer to [./Configure.md#Glfw-version].
   *Note:* **oF 0.11.0 uses GLFW pre-3.3.0**; this causes the imgui glfw backend to use an unavailable function. Until oF's GLFW library gets updated (0.12.0), `imgui_impl_glfw.cpp` will need to be modified in order to work with ofxImGui.
   - The raspberry pi might have an old GLFW implementation, please add these lines in `imgui_impl_glfw.cpp` to ensure cross platform compatibility.  
-````cpp
+  ````cpp
 // Custom modification : Add support for older GLFW versions (<3.2) (on Rpi Stretch for example)
 #include "glfwCompatibilityHacks.h"
-````  
+  ````
   - [Change `3300` to `3310`](https://github.com/ocornut/imgui/blob/dd4ca70b0d612038edadcf37bf601c0f21206d28/backends/imgui_impl_glfw.cpp#L62). This change disables some optional imgui features, related to viewport behaviour, and available mouse cursors.  
 
 - - - -

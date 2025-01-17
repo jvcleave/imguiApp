@@ -23,7 +23,7 @@ namespace ofxImGui
 		BaseEngine()
 			: isSetup(false)
 		{
-			std::cout << "New BaseEngine " << this << std::endl;
+			//std::cout << "New BaseEngine " << this << std::endl;
 		}
 
 		virtual ~BaseEngine()

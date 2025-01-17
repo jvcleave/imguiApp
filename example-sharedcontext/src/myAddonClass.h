@@ -28,5 +28,5 @@ private:
     ofParameter<ofFloatColor> foreground{ "Foreground", ofFloatColor::crimson };
     ofParameterGroup colors{ "Colors", background, foreground };
     ofParameter<float> rotationOffset{ "Rotation Offset", 180.0f, 0.0f, 360.f };
-    ofParameter<float> minSize{ "Min size", 0.f, 0.0f, ofGetHeight() };
+    ofParameter<float> minSize{ "Min size", 0.f, 0.0f, (float)ofGetHeight() }; // (float) is needed on Windows
 };

@@ -45,7 +45,7 @@ namespace ofxImGui
 	{
 	public:
 		EngineGLFW(){
-			std::cout << "New GLFWEngine " << this << std::endl;
+			//std::cout << "New GLFWEngine " << this << std::endl;
 		}
 		~EngineGLFW()
 		{

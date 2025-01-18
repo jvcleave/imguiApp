@@ -173,8 +173,29 @@ namespace ofxImGui
 		if(_restoreGuiState == false)
 			io.IniFilename = nullptr;
 
+		// Start engines
 		this->context->engine.setup( _ofWindow.get(), context->imguiContext, context->autoDraw);
 
+		// Load a default font
+		// Fixme: make this optional ? (= less GPU memory).
+		// For now we ensure a default font is always available, for the ease of use.
+		ImFont* defaultFont = nullptr;
+		if(io.Fonts->Fonts.size()==0){
+		   defaultFont = io.Fonts->AddFontDefault();
+
+            // Set as default
+            if(defaultFont){
+                rebuildFontsTexture(); // Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
+
+                // Ensure the default font is marked default (can be user-overridden later)
+                if(!io.FontDefault){
+                    //io.FontDefault = defaultFont;
+                    setDefaultFont(defaultFont);
+                }
+            }
+        }
+
+		// Load a theme
 		if (theme_)
 		{
 			setTheme(theme_);
@@ -279,7 +300,7 @@ namespace ofxImGui
     //--------------------------------------------------------------
     bool Gui::setDefaultFont(int indexAtlasFont) {
         if(context==nullptr){
-            ofLogWarning() << "You must load fonts after gui.setup() ! (ignoring this call)";
+            ofLogWarning("Gui::setDefaultFont()") << "You must load fonts after gui.setup() ! (ignoring this call)";
             return false;
         }
 
@@ -300,7 +321,7 @@ namespace ofxImGui
 
     bool Gui::setDefaultFont(ImFont* _atlasFont){
         if(context==nullptr){
-            ofLogWarning() << "You must load fonts after gui.setup() ! (ignoring this call)";
+            ofLogWarning("Gui::setDefaultFont") << "You must load fonts after gui.setup() ! (ignoring this call)";
             return false;
         }
 
@@ -309,6 +330,7 @@ namespace ofxImGui
 
 		// Don't override default font with nullptr
 		if( _atlasFont != nullptr ){
+			// Loop existing fonts to ensure setting an available font
             for(int i=0; i<io.Fonts->Fonts.size(); ++i){
                 if(io.Fonts->Fonts[i] == _atlasFont){
                     // Set font
@@ -324,26 +346,27 @@ namespace ofxImGui
 	ImFont* Gui::addFont(const std::string & fontPath, float fontSize, const ImFontConfig* _fontConfig, const ImWchar* _glyphRanges, bool _setAsDefaultFont ) {
 
 		if(context==nullptr){
-			ofLogWarning() << "You must load fonts after gui.setup() ! (ignoring this call)";
+			ofLogWarning("Gui::addFont()") << "You must load fonts after gui.setup() ! (ignoring this call)";
 			return nullptr;
 		}
 
-		//ImFontConfig structure allows you to configure oversampling.
-		//By default OversampleH = 3 and OversampleV = 1 which will make your font texture data 3 times larger
-		//than necessary, so you may reduce that to 1.
+		// ImFontConfig structure allows you to configure oversampling.
+		// By default OversampleH = 3 and OversampleV = 1 which will make your font texture data 3 times larger
+		// than necessary, so you may reduce that to 1.
 
 		ImGui::SetCurrentContext(context->imguiContext);
 		ImGuiIO& io = ImGui::GetIO();
         std::string filePath = ofFilePath::getAbsolutePath(fontPath);
 
-        // ensure default font gets loaded once
-        if(io.Fonts->Fonts.size()==0) io.Fonts->AddFontDefault();
 
         ImFont* font = io.Fonts->AddFontFromFileTTF(filePath.c_str(), fontSize, _fontConfig, _glyphRanges);
 
 		if (font != nullptr){
+			 // Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
+			 rebuildFontsTexture();
+
 			if(_setAsDefaultFont) setDefaultFont(font);
-			rebuildFontsTexture();
+
 			return font;
 		}
 		else {
@@ -354,25 +377,24 @@ namespace ofxImGui
 	ImFont* Gui::addFontFromMemory(void* fontData, int fontDataSize, float fontSize, const ImFontConfig* _fontConfig, const ImWchar* _glyphRanges, bool _setAsDefaultFont ) {
 
 		if(context==nullptr){
-		  ofLogWarning() << "You must load fonts after gui.setup() ! (ignoring this call)";
+		  ofLogWarning("Gui::addFontFromMemory()") << "You must load fonts after gui.setup() ! (ignoring this call)";
 		  return nullptr;
 		}
 
-		//ImFontConfig structure allows you to configure oversampling.
-		//By default OversampleH = 3 and OversampleV = 1 which will make your font texture data 3 times larger
-		//than necessary, so you may reduce that to 1.
+		// ImFontConfig structure allows you to configure oversampling.
+		// By default OversampleH = 3 and OversampleV = 1 which will make your font texture data 3 times larger
+		// than necessary, so you may reduce that to 1.
 
 		ImGui::SetCurrentContext(context->imguiContext);
 		ImGuiIO& io = ImGui::GetIO();
 
-		// ensure default font gets loaded once
-		if(io.Fonts->Fonts.size()==0) io.Fonts->AddFontDefault();
 
 		ImFont* font = io.Fonts->AddFontFromMemoryTTF( fontData, fontDataSize, fontSize, _fontConfig, _glyphRanges);
 
 		if (font != nullptr){
-			if(_setAsDefaultFont) setDefaultFont(font);
+			// Fixme: could be an optional call to improve loading speeds (only needs to be called once after loading all fonts).
 			rebuildFontsTexture();
+			if(_setAsDefaultFont) setDefaultFont(font);
 			return font;
 		}
 		else {
@@ -383,7 +405,7 @@ namespace ofxImGui
 	//--------------------------------------------------------------
 	bool Gui::rebuildFontsTexture(){
 		if(context==nullptr){
-		  ofLogWarning() << "You must build fonts after gui.setup() ! (ignoring this call)";
+		  ofLogWarning("Gui::rebuildFontsTexture()") << "You must build fonts after gui.setup() ! (ignoring this call)";
 		  return false;
 		}
 

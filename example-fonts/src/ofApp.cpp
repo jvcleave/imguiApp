@@ -125,6 +125,7 @@ void ofApp::draw(){
     ImGui::CollapsingHeader("Fontawesome icons", ImGuiTreeNodeFlags_Leaf);
     ImGui::PushFont(customFont);
     ImGui::Text("FontAweome is loaded too ! %s", ICON_FA_THUMBS_UP);
+    ImGui::TextWrapped("The glyphs are merged into another one, allowing mix text and " ICON_FA_IMAGES " without changing font.");
     ImGui::Button( ICON_FA_TRASH_ALT " Trash it !");
     ImGui::SameLine();
     ImGui::Button( ICON_FA_ANGRY " Mad button !");
@@ -134,6 +135,7 @@ void ofApp::draw(){
     if(useBigFaIcons){
         ImGui::TextDisabled("Icons are loaded bigger on purpose.");
     }
+    ImGui::TextDisabled("Note: the embedded icon set is NOT complete.");
     ImGui::Dummy(ImVec2(0,10));
 
     // ProggyTiny font
